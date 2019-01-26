@@ -1,0 +1,367 @@
+<div class="container-fluid content">
+
+    <div class="row">
+	
+	    <div class="col-2 lefty">
+		    <app-sidebar>  </app-sidebar>
+		</div>
+				
+		<div class="col-10 righty">
+		
+		
+		    <div *ngIf="showallprojects">
+			    
+				<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light right_nav">
+                    <a class="navbar-brand" href="#"> Projects(12) </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+	
+   
+                         </ul>
+	
+	                            <div class="form-inline">
+	
+	                                <ul class="list-inline list-unstyled">
+		
+	                                    <li class="list-inline-item">
+		                                    <i class="fas fa-sync-alt"></i>
+		                                    <span> Refresh </span>
+		                                </li>
+		
+		                                <li class="list-inline-item">
+		                                    <i class="fas fa-filter"></i>
+			                                <span>
+		                                        Filter
+			                                </span>
+		                                </li>
+		
+		                                <li class="list-inline-item">
+		                                    <input type="text" placeholder="Search Project Here" class="form-control" [(ngModel)]="nameSearch"/>
+		                                </li>
+		
+		                                <li class="list-inline-item">
+		                                    <button class="btn btn-outline-primary" type="button" (click)="showAddProjectDiv()">Create new Project </button>
+		                                </li>
+		
+		                            </ul>
+			
+	                            </div>
+		
+                    </div>
+                </nav>
+
+
+				<div class="row row2">
+				
+				    <div class="col-12">
+				   
+				        <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="showSuccess">
+                            <strong>Good!</strong> You have added new Project.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+				   
+				    </div>
+		
+		      
+		
+		
+				<div class="hor_scroll">
+				
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12  pp_card" *ngFor="let project of allProjects | search: nameSearch" (click)="selectProject(project)">
+	
+	                    <div class="project_card">
+                            <div class="project_card_head">
+	                            <div class="clearfix"> </div>
+	                            <h5 class="project_card_head_l float-left"> {{ project?.project }} </h5>
+		                        <div class="project_card_head_r float-right">
+		                            <span> </span>
+			                        <span> </span>
+			                        <span> </span>
+		                        </div>
+								
+		                    <div class="clearfix"> </div>
+	                        </div>
+		
+	                        <div class="project_card_body" [ngClass]="{'active-project': selectedProjectId == project._id }">
+							    <div class="clearfix"> </div>
+	                            <div >
+				                    <h4 class="p_body_item1 float-left"> {{ project?.formSubmitted }} </h4>
+					                <p class="p_body_item2 float-right"> Number of Forms </p>
+				                </div>
+								<div class="clearfix"> </div>
+				                <div class="">
+				                    <h4 class="p_body_item1 float-left"> {{ project?.total }} </h4>
+					                <div class="p_body_item2_pix float-right">
+					                    
+										<img src="{{project?.profile[0].imageURL}}" class="img-fluid user_img_form1"/>
+										<img src="{{project?.profile[1]?.imageURL}}" class="img-fluid user_img_form2" *ngIf="project?.total >= 2"/>
+										<img src="{{project?.profile[2]?.imageURL}}" class="img-fluid user_img_form3" *ngIf="project?.total >= 3"/>
+										<span class="more_users" *ngIf="project?.total > 3"> + {{ project?.total - 3 }}  </span>
+					                </div>
+				                </div>
+								<div class="clearfix"> </div>
+	                        </div>
+                        </div>
+						                    						
+	                </div>
+					
+									
+					
+				  </div>	
+					
+					
+                </div>
+
+            <hr/>
+
+
+			<div class="row" *ngIf="selectedProject">
+
+                <div class="m_selected">
+	                <h4> {{ selectedProject?.project }} </h4>
+		            <p> Last Updated : {{ selectedProject?.updatedAt | date }}   </p>
+		            <p> Created On:  {{ selectedProject?.createdAt | date }}    </p>
+		            <p class="details">
+		                {{ selectedProject?.description }}
+		            </p> 
+	            </div>
+				
+				<hr/>
+					
+            </div>
+			
+			<div class="row" *ngIf="selectedProject">
+			
+			    <div class="forms_pills">
+				
+				    <nav>
+					    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active form_pill_element" id="nav-home-tab" data-toggle="tab" 
+							   href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+							    Forms
+							</a>
+                            <a class="nav-item nav-link form_pill_element" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">        
+							    Users
+							</a>
+
+                        </div>
+					</nav>
+				
+				    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						    
+                            <div class="m_forms" style="margin-top: 2%;">
+							
+							    <button class="btn btn-outline-primary m_form_btn" type="button" (click)="showAddNewForm(selectedProject?._id)">     
+								    ADD NEW FORM TO PROJECT 
+								    <i class="fas fa-sort-down"></i>
+								</button>
+								 
+								<input type="text" placeholder="Search Project Here" class="form-control pro_searchform"/>
+							
+							</div>
+							
+							<div class="clearfix"> </div>
+							
+							<div class="m_filters" style="margin-top: 4%;">
+							
+							    <div class="">
+								    
+									<ul class="list-inline list-unstyled">
+		
+	                                    <li class="list-inline-item selectedform_list">
+		                                    <input type="checkbox" class="form-check-input"/>
+		                                    <span> Select All </span>
+		                                </li>
+		
+		                                <li class="list-inline-item selectedform_list">
+		                                    <i class="fas fa-filter"></i>
+			                                <span>
+		                                        Refresh
+			                                </span>
+		                                </li>
+				
+				                        <li class="list-inline-item selectedform_list">
+		                                    <i class="fas fa-sync-alt"></i>
+		                                    <span> Filter </span>
+		                                </li>
+				
+		                            </ul>
+									
+								</div>
+								
+								<div class="">
+								
+								</div>
+                                  
+								<div class="">
+
+                                    <table class="table">
+                                        <thead>
+										
+                                            <tr>
+                                                <th scope="col">Forms</th>
+                                                <th scope="col">Shapes</th>
+                                                <th scope="col">Remainder</th>
+                                            </tr>
+											
+                                        </thead>
+										
+                                        <tbody>
+										
+                                            <tr *ngFor="let form of selectedProject?.forms">
+                                                <td> {{ form?.name }} </td>
+                                                <td> {{ form?.shape }} </td>
+                                                <td> 
+												    <i class="far fa-clock"></i>   {{ form?.remainder }} 												
+												</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+									 
+                                </div>								
+								  
+							</div>
+							
+						</div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+						    
+                            <div class="">
+
+                                    <table class="table">
+                                        <thead>
+										
+                                            <tr>
+											    <th scope="col"> Image </th>
+                                                <th scope="col">First Name </th>
+                                                <th scope="col"> Last Name </th>                                             
+                                            </tr>
+											
+                                        </thead>
+										
+                                        <tbody>
+										
+                                            <tr *ngFor="let profile of selectedProject?.profile">
+                                                <td> 
+												    <img src="{{ profile?.imageURL }}"class="img-fluid user_img_form"/>					
+												</td>
+                                                <td> {{ profile?.firstName }} </td>
+                                                <td> {{ profile?.lastName }} </td>                                              
+                                            </tr>
+                                        </tbody>
+                                    </table>
+									 
+                                </div>	
+							
+						</div>
+                    </div>
+				
+				</div>
+			
+			</div>
+			
+			
+		</div>
+			
+
+<!---------------------------------------------------------------------- Add Project Section  --------------------------------------------------------------------------->
+        <div class="m_addpro">
+		
+		<div *ngIf="showAddproject">
+    
+        	<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light right_nav">
+                <a class="navbar-brand create_head" > CREATE PROJECT </a> 
+            </nav>
+			
+			<div style="margin-top: 7%;">
+			
+			    <form>
+				
+				    <div class="form-group">
+					    <input type="text" class="form-control" placeholder="Project School" #projectname/>
+					</div>
+					
+					<div class="form-group">
+					<textarea class="form-control" placeholder="Description(2000 Character)" maxlength="2000" rows="4" cols="50" #description></textarea>
+				    </div>
+					
+				    <div class="form-group">
+					 
+					    <div class="set_Form">
+						
+						    <label>  Select Form(s) </label>
+						
+						    <select class="form-control form-control-lg" [(ngModel)]="sForm" (change)="selectForm()" name="forms">
+							    <option disabled>
+							        Select One or Multiple Forms
+							    </option>
+                                <option [ngValue]="form" *ngFor="let form of allForms">
+							        {{ form?.name }} 
+							    </option>
+                            </select>
+							
+						</div>
+					  
+						<div class="" style="margin-top: 2%;">
+						    <span *ngFor="let sform of selectedForms" class="sform">
+							    {{ sform?.name }} 
+							</span>
+						</div>
+												
+					</div>
+					
+					<div class="form-group">
+					    <label>  Assign User(s) </label>
+						<select class="form-control form-control-lg" name="users" [(ngModel)]="sUser" (change)="selectUser()">
+						    <option disabled>
+							        Select One or Multiple Users
+							</option>
+                            <option [ngValue]="user" *ngFor="let user of allUsers"> 
+							    {{ user?.firstName }}
+ 							</option>
+                        </select>
+					</div>
+					
+					<div class="" style="margin-top: 2%;">
+						<span *ngFor="let uForm of selectedUsers" class="sform">
+							{{ uForm?.firstName }}  {{ uForm?.lastName }}
+						</span>
+					</div>
+					
+					<div class="form-group">
+					    <label>  Symbol </label>
+						<select class="form-control form-control-lg" (change)="selectSymbol($event)">
+                            <option value="Default"> Default </option>
+							<option value="SunShine"> SunShine  </option>
+                        </select>
+					</div>
+					
+					<div class="">
+					
+					    <button type="button" class="btn btn-default" (click)="showAllProjects()"> CANCEL </button>
+						
+						<button type="button" class="btn btn-primary" (click)="addProject(projectname.value,description.value)">
+						    CREATE PROJECT
+						</button>
+					
+					</div>
+								
+				</form>
+			
+			</div>
+					
+		</div>
+        </div>
+<!------------------------------------------------------------------- Add Project Section ends --------------------------------------------------------------------------->			
+
+		</div>
+	
+	</div>
+
+</div>
